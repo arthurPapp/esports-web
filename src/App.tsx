@@ -1,11 +1,35 @@
 import './styles/main.css'
 //podemos passar o imagens atreves de imports
 import logoImg from './assets/logo-nlv-esports.svg';
-import { MagnifyingGlassPlus } from "phosphor-react";
+import { GameBanner } from './componets/GameBanner';
+import { useState, useEffect } from 'react';
+import { CreateFormArea } from './componets/CreateFormArea';
+
 
 //REACT sintax = JSX js XML(HTML)
-// medida em rem são multiplas de 4
+//medida em rem são multiplas de 4
 function App() {
+
+  interface Game{
+    id: string;
+    title: string; 
+    bannerUrl: string;
+    _count: {
+      ads: number;
+    }
+  }
+
+  //react precisa sempre de uma variavel de estado composta por valor e função(set)
+  //usamos o <> no final do useStates para mostar que ele e generico
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8888/games')
+      .then(response => response.json())
+      .then(data => {
+        setGames(data);
+      })
+  }, [])
 
   //ler a doc do tailwind para se familiarizar com os nomes das classes
   return (
@@ -15,17 +39,40 @@ function App() {
       <h1 className='text-6xl text-white font-black mt-20'>
         Seu <span className='text-transparent bg-nlw-gradient bg-clip-text'>duo</span> está aqui.
       </h1>
-
+      
       {/* div responsavel pelo grid dos games */}
       <div className="grid grid-cols-6 gap-6 mt-16">
-        <a href='' className='relative rounded-lg even'>
+        {/* informaçoes que se repetem muito são exelentes exemplos de componentes */}
+        {games.map(game => {
+          return (
+            <GameBanner
+              key={game.id}
+              bannerUrl={game.bannerUrl}
+              title={game.title}
+              adsCount={game._count.ads}
+            />
+          );
+        })}
+      </div>
+
+      <CreateFormArea />
+      
+
+    </div>
+  )
+}
+
+export default App
+
+// exemplo de lista
+ {/* <a href='' className='relative rounded-lg even'>
           <img src='/game1.png'></img>
           <div className='w-full pt-16 pb-4 px-4 bg-game-gradient absolute bottom-0 left-0 right-0'>
             <strong className='font-bold text-white block'>Apex Legends</strong>
             <span className='text-zinc-300 text-sm block'>4 anúncios</span>
           </div>
-        </a> 
-         <a href='' className='relative rounded-lg even'>
+        </a>  */}
+         {/* <a href='' className='relative rounded-lg even'>
           <img src='/game2.png'></img>
            <div className='w-full pt-16 pb-4 px-4 bg-game-gradient absolute bottom-0 left-0 right-0'>
             <strong className='font-bold text-white block'>CS:Go</strong>
@@ -59,25 +106,4 @@ function App() {
             <strong className='font-bold text-white block'>Word of Warcraft</strong>
             <span className='text-zinc-300 text-sm block'>4 anúncios</span>
           </div>
-        </a> 
-      </div>
-
-      
-      <div className='pt-1 bg-nlw-gradient self-stretch rounded-lg mt-8 overflow-hidden '>
-        <div className='bg-[#2A2634] px-8 py-6 flex justify-between items-center'>
-          <div>
-             <strong className='text-2xl text-white font-black block'>Não encotrou seu duo?</strong>
-            <span className='text-zinc-400'>Publique um anúncio para encotrar novos palyers!</span>
-          </div>
-          <button className='py-3 px-4 bg-violet-500 hover:bg-violet-600 text-white rounded flex items-center gap-3'>
-            <MagnifyingGlassPlus size={24}/>
-            Publicar anúncio
-          </button>
-        </div>
-      </div>
-       
-    </div>
-  )
-}
-
-export default App
+        </a>  */}

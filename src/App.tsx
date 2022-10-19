@@ -3,8 +3,9 @@ import './styles/main.css'
 import logoImg from './assets/logo-nlv-esports.svg';
 import { GameBanner } from './componets/GameBanner';
 import { useState, useEffect } from 'react';
-import { CreateFormArea } from './componets/CreateFormArea';
-
+import { CreateAdModal } from './componets/CreateAdModal';
+import * as Dialog from '@radix-ui/react-dialog';
+import { CreateAdBanner } from './componets/CreateAdBanner';
 
 //REACT sintax = JSX js XML(HTML)
 //medida em rem são multiplas de 4
@@ -54,9 +55,11 @@ function App() {
           );
         })}
       </div>
-
-      <CreateFormArea />
-      
+        {/* portal serve para apresentar e outro lugar da tela */}
+       <Dialog.Root>
+        <CreateAdBanner />
+         <CreateAdModal />
+      </Dialog.Root>
 
     </div>
   )
